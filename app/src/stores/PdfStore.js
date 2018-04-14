@@ -15,7 +15,7 @@ export default new Vuex.Store({
 	},
 	mutations: {
 		setLink(state, pdfName) {
-			this.pdfLink = `/api/pdf${pdfName}`;
+			state.pdfLink = `/pdf/${pdfName}`;
 		}
 	},
 	actions: {
