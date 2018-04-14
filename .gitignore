@@ -1,0 +1,9 @@
+.idea
+*.iml
+app/node_modules
+app/dist
+server/cache
+server/vendor
+server/public
+server/.env
+.DS_Store
