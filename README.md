@@ -4,7 +4,7 @@
 
 It generate PDF file with your trello access.
 
-**3loprint does not save your information. It uses Pouch DB, you can delete it when you want**.s
+**3loprint does not save your information. It uses Pouch DB, you can delete it when you want**.
 
 ## Technologies
 
