@@ -4,6 +4,8 @@
 
 It generate PDF file with your trello access.
 
+**3loprint does not save your information. It uses Pouch DB, you can delete it when you want**.s
+
 ## Technologies
 
 3loprint is built with [VueJS](https://vuejs.org/), [PouchDB](https://pouchdb.com/) and [klein.php](https://github.com/klein/klein.php).
