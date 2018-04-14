@@ -22,7 +22,7 @@ $klein->respond('GET', '/', function () use ($twig) {
 $klein->respond('GET', '/pdf/[:link]', function ($request, $response) {
     $link = $request->param('link');
 
-    $response->file("./$link.pdf");
+    $response->file("./public/pdf/$link.pdf");
 });
 
 $klein->respond('POST', '/generate', function ($request, $response, $service) use ($twig) {
@@ -38,7 +38,7 @@ $klein->respond('POST', '/generate', function ($request, $response, $service) us
     $output = $dompdf->output();
     $name = time();
 
-    file_put_contents("$name.pdf", $output);
+    file_put_contents("public/pdf/$name.pdf", $output);
 
     return "$name";
 });
