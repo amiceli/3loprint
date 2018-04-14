@@ -6,5 +6,6 @@ server/cache
 server/vendor
 server/public/index.html
 server/public/favicon.ico
+server/public/pdf/*
 server/.env
 .DS_Store
