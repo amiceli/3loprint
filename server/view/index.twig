@@ -1,0 +1,15 @@
+<style>
+    @page {
+        margin : 55px 7px;
+    }
+
+    img {
+        padding     : 0 !important;
+        margin      : 0 !important;
+        margin-left : -7px !important;
+    }
+</style>
+
+{% for p in postIts %}
+    <img src="{{ p }}" alt="post-it img"/>
+{% endfor %}
