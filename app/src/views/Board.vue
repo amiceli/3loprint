@@ -166,6 +166,10 @@
         }
     }
 
+    a {
+        margin-left: 10px;
+    }
+
     h2 {
         font-weight: 400;
         small {
