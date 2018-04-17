@@ -124,21 +124,27 @@
 			}
 		},
 		mounted() {
-			// Maybe, I can do something to optimize this section of code
+			let self = this;
 
-			this.$store.dispatch("loadMembers");
+			self.$store.dispatch("loadMembers");
 
-			this.$store.dispatch("loadBoard", this.$route.params.id).then(() => {
-				this.$store.dispatch("loadBoardLists", this.$route.params.id).then(res => {
-					this.message = "ok, now we load board list cards";
+			(async function load() {
+				try {
+					await self.$store.dispatch("loadBoard", self.$route.params.id);
+					await self.$store.dispatch("loadBoardLists", self.$route.params.id);
+					await self.$store.dispatch("loadBoardCards", self.$route.params.id);
 
-					this.$store.dispatch("loadBoardCards", this.$route.params.id).then(res => {
-						this.loading = false;
+					self.loading = false;
+				} catch (e) {
+					console.error('An error occurred', e);
+					self.$notify({
+						title: 'Oops',
+						message: 'Some resources couldn\'t be loaded',
+						type: 'error'
 					});
-				});
-			}).catch((err) => {
-				this.$router.push({name: 'home'});
-			});
+					self.$router.push({name: 'home'});
+				}
+			})();
 		}
 	};
 </script>
