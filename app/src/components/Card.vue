@@ -1,5 +1,14 @@
 <template>
-    <li class="card" v-bind:class="{'no-style' : preview, 'pdf-style' : pdf}" v-bind:id="'card-' + card.id">
+    <li class="card" v-bind:class="{'no-style' : preview, 'pdf-style' : pdf, 'hoverable' : card.checklists.length > 0}" v-bind:id="'card-' + card.id">
+        <div class="card__overlay" v-if="card.checklists.length > 0" v-on:click="displayTasks(card.id)">
+            <div>
+                <span>
+                    See tasks
+                </span>
+                <br>
+                <font-awesome-icon icon="eye" size="3x"/>
+            </div>
+        </div>
         <div class="card__members">
             <span v-for="id in card.idMembers">{{ getInitial(id) }}</span>
         </div>
@@ -92,7 +101,10 @@
 						break membersLoop;
 					}
 				}
-			}
+			},
+			displayTasks (cardId) {
+
+            }
 		}
 	};
 </script>
@@ -130,6 +142,42 @@
         margin-right: 15px;
         transition: all 0.3s ease-in-out;
         overflow: hidden;
+
+        &.hoverable:hover {
+            .card__overlay {
+                display: flex;
+            }
+            /*, .card__name, .card__labels, .card__id, .card__select*/
+            .card__members, .card__points {
+                filter: blur(10px);
+            }
+        }
+
+        &__overlay {
+            position: absolute;
+            width: 100%;
+            height: 30%;
+            top: 0;
+            left: 0;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.2);
+            align-items: center;
+            justify-content: center;
+            display: none;
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            div {
+                display: inline-block;
+                color: white;
+
+                span {
+                    font-size: 22px;
+                }
+            }
+        }
 
         &__select {
             position: absolute;

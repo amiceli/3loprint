@@ -7,6 +7,7 @@
                 {{ board.name }}
             </h1>
             <el-button type="primary" plain v-on:click="preview = !preview">
+                <font-awesome-icon icon="eye" />
                 {{ preview ? 'disable preview' : 'preview card' }}
             </el-button>
             <el-button type="primary" plain v-on:click="generatePdf()">
