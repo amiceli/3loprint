@@ -1,13 +1,16 @@
 <template>
-    <el-row :gutter="20">
+    <el-row :gutter="20" v-if="board != null">
+        <Checklists></Checklists>
         <Spinner :message="message" v-if="loading"></Spinner>
         <OverflowSpinner v-if="generating"></OverflowSpinner>
         <el-col :span="20" :offset="2" v-if="!loading && board != null">
-            <h1>
-                {{ board.name }}
-            </h1>
+            <header v-bind:style="board.getBackgroundStyle()">
+                <h1>
+                    {{ board.name }}
+                </h1>
+            </header>
             <el-button type="primary" plain v-on:click="preview = !preview">
-                <font-awesome-icon icon="eye" />
+                <font-awesome-icon icon="eye"/>
                 {{ preview ? 'disable preview' : 'preview card' }}
             </el-button>
             <el-button type="primary" plain v-on:click="generatePdf()">
@@ -19,7 +22,7 @@
                 </el-button>
             </a>
             <div v-for="l in board.lists" :key="l.id">
-                <h2>
+                <h2 v-if="l.cards.length > 0">
                     {{ l.name }}
                     <small>
                         {{ l.cards.length }} cards
@@ -28,7 +31,7 @@
                         select all cards
                     </el-checkbox>
                 </h2>
-                <div class="lists">
+                <div class="lists" v-if="l.cards.length > 0">
                     <ul v-bind:style="{width : (l.cards.length * 330) + 'px'}">
                         <Card v-for="c in l.cards" :card="c" :key="c.id" :preview="preview" :pdf="pdf"></Card>
                     </ul>
@@ -43,13 +46,14 @@
 	import TrelloStore from "@/stores/TrelloStore.js";
 	import Spinner from "@/components/Spinner.vue";
 	import OverflowSpinner from "@/components/OverflowSpinner.vue";
+	import Checklists from "@/components/Checklists.vue";
 	import Card from "@/components/Card.vue";
 	import PdfStore from "@/stores/PdfStore.js";
 	import domtoimage from "dom-to-image";
 
 	export default {
 		store: TrelloStore,
-		components: {Spinner, Card, OverflowSpinner},
+		components: {Spinner, Card, OverflowSpinner, Checklists},
 		data() {
 			return {
 				loading: true,
@@ -151,13 +155,32 @@
 </script>
 
 <style lang="scss" scoped>
-    * {
+
+    .spinner {
+        margin-top: 100px;
+    }
+    header {
+        height: 100px;
+        line-height: 100px;
+        margin-bottom: 20px;
+        background: #fedafe;
+        /*position: absolute;*/
+        top: 62px;
+        width: 100%;
+        left: 0;
+        z-index: 255;
+
+        h1 {
+            text-align: center;
+            font-weight: 500;
+            margin: 0;
+            padding: 0;
+            color: rgba(0, 0, 0, 0.6);
+        }
     }
 
-    h1 {
-        text-align: center;
-        font-weight: 500;
-        margin-bottom: 50px;
+    .el-col {
+        /*padding-top: 100px;*/
     }
 
     .lists {
