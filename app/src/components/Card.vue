@@ -1,6 +1,8 @@
 <template>
-    <li class="card" v-bind:class="{'no-style' : preview, 'pdf-style' : pdf, 'hoverable' : card.checklists.length > 0}" v-bind:id="'card-' + card.id">
-        <div class="card__overlay" v-if="card.checklists.length > 0" v-on:click="displayTasks(card.id)">
+    <li class="card"
+        v-bind:class="{'no-rotate' : rotate === false, 'no-style' : preview, 'pdf-style' : pdf, 'hoverable' : card.checklists.length > 0}"
+        v-bind:id="'card-' + card.id">
+        <div class="card__overlay" v-if="card.checklists.length > 0" v-on:click="displayTasks()">
             <div>
                 <span>
                     See tasks
@@ -30,7 +32,7 @@
                 #{{ card.idShort }}
             </span>
         </div>
-        <div class="card__select">
+        <div class="card__select" v-if="checklist === false">
             <el-checkbox v-on:change="selectCard($event, card)" v-bind:value="isSelected(card.id)"></el-checkbox>
         </div>
     </li>
@@ -39,8 +41,8 @@
 <script>
 	import TrelloStore from "@/stores/TrelloStore.js";
 	import PdfStore from "@/stores/PdfStore.js";
-
-	const rex = /\([^)]*\)|\[[^\]]*\]/g;
+	import ChecklistStore from "@/stores/ChecklistStore.js";
+	import CardParser from '@/utils/CardParser.js';
 
 	export default {
 		store: TrelloStore,
@@ -55,6 +57,14 @@
 			},
 			pdf: {
 				default: false,
+				type: Boolean
+			},
+			checklist: {
+				default: false,
+				type: Boolean
+			},
+			rotate: {
+				default: true,
 				type: Boolean
 			}
 		},
@@ -74,16 +84,10 @@
 				PdfStore.dispatch("selectCard", card.id);
 			},
 			getPoints(name) {
-				let points = rex.exec(name);
-
-				if (points != null && points.length > 0) {
-					return points[0].replace("(", "").replace(")", "");
-				}
-
-				return "";
+				return CardParser.getPoints(name);
 			},
 			getName(name) {
-				return name.replace(rex, "");
+				return CardParser.getName(name);
 			},
 			getInitial(memberId) {
 				membersLoop: for (let m of this.members) {
@@ -102,9 +106,9 @@
 					}
 				}
 			},
-			displayTasks (cardId) {
-
-            }
+			displayTasks() {
+				ChecklistStore.commit('setCard', this.card);
+			}
 		}
 	};
 </script>
@@ -130,18 +134,20 @@
         height: 290px;
         text-align: center;
         padding: 10px;
-        /*display: inline-block;*/
         float: left;
         position: relative;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         box-shadow: 0 10px 10px 2px rgba(0, 0, 0, 0.3);
-        background: #f0e9a0;
-        transform: rotate(3.5deg) scale(0.9);
+        background: #ffeb67;
         margin-right: 15px;
         transition: all 0.3s ease-in-out;
         overflow: hidden;
+
+        &.no-rotate {
+            transform: none;
+        }
 
         &.hoverable:hover {
             .card__overlay {
@@ -259,7 +265,6 @@
 
         &.no-style,
         &.pdf-style {
-            transform: none;
             box-shadow: none;
             background: white;
             border: 1px dashed black;
