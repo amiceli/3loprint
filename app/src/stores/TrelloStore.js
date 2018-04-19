@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import TrelloApiConnector from "@/utils/TrelloApiConnector";
 import DatabaseManager from "@/utils/DatabaseManager";
+import Board from '@/models/Board';
 
 Vue.use(Vuex);
 
@@ -46,7 +47,13 @@ export default new Vuex.Store({
 					config.token,
 					config.organization
 				).then(response => {
-					commit("updateBoards", response.data);
+					let boards = [];
+
+					for (let board of response.data) {
+						boards.push( new Board(board) )
+					}
+
+					commit("updateBoards", boards);
 					return response;
 				}).catch(err => {
 					console.error("An error occurred listBoards : ", err);
@@ -61,7 +68,7 @@ export default new Vuex.Store({
 					config.organization,
 					boardId
 				).then(response => {
-					commit("updateBoard", response.data);
+					commit("updateBoard", new Board(response.data));
 					return response;
 				}).catch(err => {
 					console.error("An error occurred loadBoard : ", err);
