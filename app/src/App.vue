@@ -19,3 +19,14 @@
 		}
 	};
 </script>
+
+<style lang="scss" scoped>
+    .el-header {
+        position: fixed;
+        width: 100%;
+        z-index: 255;
+    }
+    .el-main {
+        padding-top: 80px;
+    }
+</style>
