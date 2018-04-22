@@ -1,8 +1,8 @@
 <template>
     <li class="card"
-        v-bind:class="{'no-rotate' : rotate === false, 'no-style' : preview, 'pdf-style' : pdf, 'hoverable' : card.checklists.length > 0}"
+        v-bind:class="{'no-rotate' : rotate === false, 'no-style' : preview, 'pdf-style' : pdf, 'hoverable' : card.hasChecklistsItem()}"
         v-bind:id="'card-' + card.id">
-        <div class="card__overlay" v-if="card.checklists.length > 0" v-on:click="displayTasks()">
+        <div class="card__overlay" v-if="card.hasChecklistsItem()" v-on:click="displayTasks()">
             <div>
                 <span>
                     See tasks
@@ -16,11 +16,11 @@
         </div>
         <div class="card__points">
             <span>
-                {{ getPoints(card.name) }}
+                {{ card.getPoints() }}
             </span>
         </div>
         <div class="card__name">
-            {{ getName(card.name) }}
+            {{ card.getName() }}
         </div>
         <div class="card__labels">
             <span v-for="l in card.labels" v-bind:style="{background : preview ? 'transparent' : l.color}">
@@ -42,7 +42,6 @@
 	import TrelloStore from "@/stores/TrelloStore.js";
 	import PdfStore from "@/stores/PdfStore.js";
 	import ChecklistStore from "@/stores/ChecklistStore.js";
-	import CardParser from '@/utils/CardParser.js';
 
 	export default {
 		store: TrelloStore,
@@ -82,12 +81,6 @@
 			},
 			selectCard(val, card) {
 				PdfStore.dispatch("selectCard", card.id);
-			},
-			getPoints(name) {
-				return CardParser.getPoints(name);
-			},
-			getName(name) {
-				return CardParser.getName(name);
 			},
 			getInitial(memberId) {
 				membersLoop: for (let m of this.members) {

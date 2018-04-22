@@ -33,7 +33,7 @@
 			};
 		},
 		mounted() {
-			this.$store.dispatch("listBoards").then(response => {
+			this.$store.dispatch("listBoards").then((response) => {
 				this.$notify.success(`${response.data.length} boards loaded`);
 				setTimeout(() => {
 					this.loading = false;
