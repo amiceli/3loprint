@@ -23,6 +23,7 @@
 <script>
 	import ChecklistStore from "@/stores/ChecklistStore.js";
 	import Card from '@/components/Card.vue';
+	import CardModel from '@/models/Card';
 
 	export default {
 		store: ChecklistStore,
@@ -36,13 +37,13 @@
 		},
 		methods: {
 			generateCardFromChecklistItem(item) {
-				return {
+				return new CardModel({
 					name: item.name,
 					id: item.id,
 					checklists: [],
 					idShort: this.card.idShort,
 					idMembers: this.card.idMembers
-				}
+				});
 			},
 			close() {
 				this.$store.commit('emptyCard');

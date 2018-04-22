@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import TrelloApiConnector from "@/utils/TrelloApiConnector";
 import DatabaseManager from "@/utils/DatabaseManager";
 import Board from '@/models/Board';
+import Card from '@/models/Card';
 
 Vue.use(Vuex);
 
@@ -21,9 +22,9 @@ export default new Vuex.Store({
 		},
 		updateBoardCards(state, cards) {
 			for (let l of state.board.lists) {
-				for (let i in cards) {
-					if (l.id === cards[i].idList) {
-						l.cards.push(cards[i]);
+				for (let card of cards) {
+					if (l.id === card.idList) {
+						l.cards.push( new Card(card) );
 					}
 				}
 			}
@@ -46,7 +47,7 @@ export default new Vuex.Store({
 					config.key,
 					config.token,
 					config.organization
-				).then(response => {
+				).then((response) => {
 					let boards = [];
 
 					for (let board of response.data) {
@@ -55,7 +56,7 @@ export default new Vuex.Store({
 
 					commit("updateBoards", boards);
 					return response;
-				}).catch(err => {
+				}).catch((err) => {
 					console.error("An error occurred listBoards : ", err);
 				});
 			});

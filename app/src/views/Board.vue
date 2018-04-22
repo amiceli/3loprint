@@ -159,6 +159,7 @@
     .spinner {
         margin-top: 100px;
     }
+
     header {
         height: 100px;
         line-height: 100px;
