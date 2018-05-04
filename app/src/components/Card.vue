@@ -2,7 +2,7 @@
     <li class="card"
         v-bind:class="{'no-rotate' : rotate === false, 'no-style' : preview, 'pdf-style' : pdf, 'hoverable' : card.hasChecklistsItem()}"
         v-bind:id="'card-' + card.id">
-        <div class="card__overlay" v-if="card.hasChecklistsItem()" v-on:click="displayTasks()">
+        <div class="card__overlay" v-if="card.hasChecklistsItem() && pdf === false" v-on:click="displayTasks()">
             <div>
                 <span>
                     See tasks

@@ -11,7 +11,8 @@ export default new Vuex.Store({
 	state: {
 		boards: [],
 		board: null,
-		members: []
+		members: [],
+		checklistsItem: []
 	},
 	mutations: {
 		updateBoards(state, list) {
@@ -20,11 +21,31 @@ export default new Vuex.Store({
 		updateBoard(state, board) {
 			state.board = board;
 		},
+		updateBoardChecklists(state, cards) {
+			for (let card of cards) {
+				for (let checklist of card.checklists) {
+					for (let item of checklist.checkItems) {
+						let checkItem = Object.assign({
+							idCard: checklist.idCard,
+							idShort: card.idShort,
+							checklists: []
+						}, item);
+						state.checklistsItem.push(new Card(checkItem));
+					}
+				}
+			}
+
+			console.log('state.checklistsItem : ', state.checklistsItem);
+		},
 		updateBoardCards(state, cards) {
 			for (let l of state.board.lists) {
 				for (let card of cards) {
 					if (l.id === card.idList) {
-						l.cards.push( new Card(card) );
+						l.cards.push(new Card(card));
+					}
+
+					for (let checlist of card.checklists) {
+
 					}
 				}
 			}
@@ -51,7 +72,7 @@ export default new Vuex.Store({
 					let boards = [];
 
 					for (let board of response.data) {
-						boards.push( new Board(board) )
+						boards.push(new Board(board))
 					}
 
 					commit("updateBoards", boards);
@@ -85,6 +106,7 @@ export default new Vuex.Store({
 					boardId
 				).then(response => {
 					commit("updateBoardCards", response.data);
+					commit("updateBoardChecklists", response.data);
 					return response;
 				}).catch(err => {
 					console.log("err : ", err);

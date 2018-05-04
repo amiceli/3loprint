@@ -3,6 +3,7 @@
         <Checklists></Checklists>
         <Spinner :message="message" v-if="loading"></Spinner>
         <OverflowSpinner v-if="generating"></OverflowSpinner>
+        <PrintChecklists v-if="showCheckitems"></PrintChecklists>
         <el-col :span="20" :offset="2" v-if="!loading && board != null">
             <header v-bind:style="board.getBackgroundStyle()">
                 <h1>
@@ -46,6 +47,7 @@
 	import TrelloStore from "@/stores/TrelloStore.js";
 	import Spinner from "@/components/Spinner.vue";
 	import OverflowSpinner from "@/components/OverflowSpinner.vue";
+	import PrintChecklists from "@/components/PrintChecklists.vue";
 	import Checklists from "@/components/Checklists.vue";
 	import Card from "@/components/Card.vue";
 	import PdfStore from "@/stores/PdfStore.js";
@@ -53,7 +55,7 @@
 
 	export default {
 		store: TrelloStore,
-		components: {Spinner, Card, OverflowSpinner, Checklists},
+		components: {Spinner, Card, OverflowSpinner, Checklists, PrintChecklists},
 		data() {
 			return {
 				loading: true,
@@ -61,20 +63,30 @@
 				preview: false,
 				generating: false,
 				pdf: false,
-				link: null
+				link: null,
+				showCheckitems : false
 			};
 		},
 		methods: {
 			generatePdf() {
 				this.generating = true;
 				this.pdf = true;
+				this.showCheckitems = true;
 
 				setTimeout(() => {
+
 					let promises = [];
+
+					let node = document.getElementById('lo-checkItems');
+
+					for (let item of node.children) {
+						promises.push(domtoimage.toJpeg(item));
+                    }
+
 
 					for (let card of this.selectedCards) {
 						promises.push(
-							domtoimage.toPng(document.getElementById(`card-${card}`))
+							domtoimage.toJpeg(document.getElementById(`card-${card}`))
 						);
 					}
 
@@ -82,6 +94,7 @@
 						PdfStore.dispatch("generate", {postIts: values}).then(() => {
 							this.pdf = false;
 							this.generating = false;
+							this.showCheckitems = false;
 						}).catch(() => {
 							// display error message
 						});
