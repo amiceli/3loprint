@@ -38,7 +38,7 @@ $klein->respond('POST', '/generate', function ($request, $response, $service) us
     $output = $dompdf->output();
     $name = time();
 
-    file_put_contents("public/pdf/$name.pdf", $output);
+    file_put_contents(__DIR__ . "/public/pdf/$name.pdf", $output);
 
     return "$name";
 });

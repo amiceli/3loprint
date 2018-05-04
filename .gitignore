@@ -4,6 +4,8 @@ app/node_modules
 app/dist
 server/cache
 server/vendor
-server/public
+server/public/pdf/*.pdf
 server/.env
 .DS_Store
+server/public/favicon.ico
+server/public/index.html
