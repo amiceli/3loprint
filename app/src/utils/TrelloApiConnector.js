@@ -14,7 +14,7 @@ export default {
 		return instance.get(`/1/boards/${id}`, {params: {key, token}});
 	},
 	getBoardCards(key, token, organization, id) {
-		return instance.get(`/1/boards/${id}/cards`, {params: {key, token}});
+		return instance.get(`/1/boards/${id}/cards?checklists=all`, {params: {key, token}});
 	},
 	getBoardLists(key, token, organization, id) {
 		return instance.get(`/1/boards/${id}/lists`, {params: {key, token}});

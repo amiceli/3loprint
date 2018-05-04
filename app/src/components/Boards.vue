@@ -7,7 +7,7 @@
             </h1>
             <br>
             <div class="boards" v-for="b in boards" :key="b.id" v-on:click="chooseBoard(b)">
-                <el-card class="box-card" v-bind:style="background(b)">
+                <el-card class="box-card" v-bind:style="b.getBackgroundStyle()">
                 <span>
                     {{ b.name }}
                 </span>
@@ -33,7 +33,7 @@
 			};
 		},
 		mounted() {
-			this.$store.dispatch("listBoards").then(response => {
+			this.$store.dispatch("listBoards").then((response) => {
 				this.$notify.success(`${response.data.length} boards loaded`);
 				setTimeout(() => {
 					this.loading = false;
@@ -48,17 +48,6 @@
 		methods: {
 			chooseBoard(board) {
 				this.$router.push({name: "board", params: {id: board.id}});
-			},
-			background(board) {
-				if (board.prefs.backgroundImage) {
-					return {
-						backgroundImage: `url("${board.prefs.backgroundImage}")`
-					};
-				} else {
-					return {
-						background: board.prefs.backgroundColor
-					};
-				}
 			}
 		}
 	};

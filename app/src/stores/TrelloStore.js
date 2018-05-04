@@ -2,6 +2,8 @@ import Vue from "vue";
 import Vuex from "vuex";
 import TrelloApiConnector from "@/utils/TrelloApiConnector";
 import DatabaseManager from "@/utils/DatabaseManager";
+import Board from '@/models/Board';
+import Card from '@/models/Card';
 
 Vue.use(Vuex);
 
@@ -9,7 +11,8 @@ export default new Vuex.Store({
 	state: {
 		boards: [],
 		board: null,
-		members: []
+		members: [],
+		checklistsItem: []
 	},
 	mutations: {
 		updateBoards(state, list) {
@@ -18,11 +21,31 @@ export default new Vuex.Store({
 		updateBoard(state, board) {
 			state.board = board;
 		},
+		updateBoardChecklists(state, cards) {
+			for (let card of cards) {
+				for (let checklist of card.checklists) {
+					for (let item of checklist.checkItems) {
+						let checkItem = Object.assign({
+							idCard: checklist.idCard,
+							idShort: card.idShort,
+							checklists: []
+						}, item);
+						state.checklistsItem.push(new Card(checkItem));
+					}
+				}
+			}
+
+			console.log('state.checklistsItem : ', state.checklistsItem);
+		},
 		updateBoardCards(state, cards) {
 			for (let l of state.board.lists) {
-				for (let i in cards) {
-					if (l.id === cards[i].idList) {
-						l.cards.push(cards[i]);
+				for (let card of cards) {
+					if (l.id === card.idList) {
+						l.cards.push(new Card(card));
+					}
+
+					for (let checlist of card.checklists) {
+
 					}
 				}
 			}
@@ -45,10 +68,16 @@ export default new Vuex.Store({
 					config.key,
 					config.token,
 					config.organization
-				).then(response => {
-					commit("updateBoards", response.data);
+				).then((response) => {
+					let boards = [];
+
+					for (let board of response.data) {
+						boards.push(new Board(board))
+					}
+
+					commit("updateBoards", boards);
 					return response;
-				}).catch(err => {
+				}).catch((err) => {
 					console.error("An error occurred listBoards : ", err);
 				});
 			});
@@ -61,7 +90,7 @@ export default new Vuex.Store({
 					config.organization,
 					boardId
 				).then(response => {
-					commit("updateBoard", response.data);
+					commit("updateBoard", new Board(response.data));
 					return response;
 				}).catch(err => {
 					console.error("An error occurred loadBoard : ", err);
@@ -77,6 +106,7 @@ export default new Vuex.Store({
 					boardId
 				).then(response => {
 					commit("updateBoardCards", response.data);
+					commit("updateBoardChecklists", response.data);
 					return response;
 				}).catch(err => {
 					console.log("err : ", err);

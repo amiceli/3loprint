@@ -4,7 +4,14 @@ import router from "./router";
 import store from "./store";
 import Element from "element-ui";
 
+import fontawesome from '@fortawesome/fontawesome';
+import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
+import fasolid from '@fortawesome/fontawesome-free-solid';
+
+fontawesome.library.add(fasolid);
+
 Vue.use(Element);
+Vue.component(FontAwesomeIcon.name, FontAwesomeIcon);
 
 import "element-ui/lib/theme-chalk/index.css";
 

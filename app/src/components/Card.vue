@@ -1,15 +1,26 @@
 <template>
-    <li class="card" v-bind:class="{'no-style' : preview, 'pdf-style' : pdf}" v-bind:id="'card-' + card.id">
+    <li class="card"
+        v-bind:class="{'no-rotate' : rotate === false, 'no-style' : preview, 'pdf-style' : pdf, 'hoverable' : card.hasChecklistsItem()}"
+        v-bind:id="'card-' + card.id">
+        <div class="card__overlay" v-if="card.hasChecklistsItem() && pdf === false" v-on:click="displayTasks()">
+            <div>
+                <span>
+                    See tasks
+                </span>
+                <br>
+                <font-awesome-icon icon="eye" size="3x"/>
+            </div>
+        </div>
         <div class="card__members">
             <span v-for="id in card.idMembers">{{ getInitial(id) }}</span>
         </div>
         <div class="card__points">
             <span>
-                {{ getPoints(card.name) }}
+                {{ card.getPoints() }}
             </span>
         </div>
         <div class="card__name">
-            {{ getName(card.name) }}
+            {{ card.getName() }}
         </div>
         <div class="card__labels">
             <span v-for="l in card.labels" v-bind:style="{background : preview ? 'transparent' : l.color}">
@@ -21,7 +32,7 @@
                 #{{ card.idShort }}
             </span>
         </div>
-        <div class="card__select">
+        <div class="card__select" v-if="checklist === false">
             <el-checkbox v-on:change="selectCard($event, card)" v-bind:value="isSelected(card.id)"></el-checkbox>
         </div>
     </li>
@@ -30,8 +41,7 @@
 <script>
 	import TrelloStore from "@/stores/TrelloStore.js";
 	import PdfStore from "@/stores/PdfStore.js";
-
-	const rex = /\([^)]*\)|\[[^\]]*\]/g;
+	import ChecklistStore from "@/stores/ChecklistStore.js";
 
 	export default {
 		store: TrelloStore,
@@ -46,6 +56,14 @@
 			},
 			pdf: {
 				default: false,
+				type: Boolean
+			},
+			checklist: {
+				default: false,
+				type: Boolean
+			},
+			rotate: {
+				default: true,
 				type: Boolean
 			}
 		},
@@ -64,18 +82,6 @@
 			selectCard(val, card) {
 				PdfStore.dispatch("selectCard", card.id);
 			},
-			getPoints(name) {
-				let points = rex.exec(name);
-
-				if (points != null && points.length > 0) {
-					return points[0].replace("(", "").replace(")", "");
-				}
-
-				return "";
-			},
-			getName(name) {
-				return name.replace(rex, "");
-			},
 			getInitial(memberId) {
 				membersLoop: for (let m of this.members) {
 					if (m.id === memberId) {
@@ -92,6 +98,9 @@
 						break membersLoop;
 					}
 				}
+			},
+			displayTasks() {
+				ChecklistStore.commit('setCard', this.card);
 			}
 		}
 	};
@@ -118,18 +127,56 @@
         height: 290px;
         text-align: center;
         padding: 10px;
-        /*display: inline-block;*/
         float: left;
         position: relative;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         box-shadow: 0 10px 10px 2px rgba(0, 0, 0, 0.3);
-        background: #f0e9a0;
-        transform: rotate(3.5deg) scale(0.9);
+        background: #ffeb67;
         margin-right: 15px;
         transition: all 0.3s ease-in-out;
         overflow: hidden;
+
+        &.no-rotate {
+            transform: none;
+        }
+
+        &.hoverable:hover {
+            .card__overlay {
+                display: flex;
+            }
+            /*, .card__name, .card__labels, .card__id, .card__select*/
+            .card__members, .card__points {
+                filter: blur(10px);
+            }
+        }
+
+        &__overlay {
+            position: absolute;
+            width: 100%;
+            height: 30%;
+            top: 0;
+            left: 0;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.2);
+            align-items: center;
+            justify-content: center;
+            display: none;
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            div {
+                display: inline-block;
+                color: white;
+
+                span {
+                    font-size: 22px;
+                }
+            }
+        }
 
         &__select {
             position: absolute;
@@ -211,7 +258,6 @@
 
         &.no-style,
         &.pdf-style {
-            transform: none;
             box-shadow: none;
             background: white;
             border: 1px dashed black;
