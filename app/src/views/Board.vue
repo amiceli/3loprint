@@ -117,7 +117,28 @@
 				}
 
 				return selected;
-			}
+			},
+            async load () {
+				let self = this;
+
+				this.$store.dispatch("loadMembers");
+
+				try {
+					await self.$store.dispatch("loadBoard", self.$route.params.id);
+					await self.$store.dispatch("loadBoardLists", self.$route.params.id);
+					await self.$store.dispatch("loadBoardCards", self.$route.params.id);
+
+					self.loading = false;
+				} catch (e) {
+					console.error('An error occurred', e);
+					self.$notify({
+						title: 'Oops',
+						message: 'Some resources couldn\'t be loaded',
+						type: 'error'
+					});
+					self.$router.push({name: 'home'});
+				}
+            }
 		},
 		computed: {
 			board() {
@@ -142,27 +163,7 @@
 			}
 		},
 		mounted() {
-			let self = this;
-
-			self.$store.dispatch("loadMembers");
-
-			(async function load() {
-				try {
-					await self.$store.dispatch("loadBoard", self.$route.params.id);
-					await self.$store.dispatch("loadBoardLists", self.$route.params.id);
-					await self.$store.dispatch("loadBoardCards", self.$route.params.id);
-
-					self.loading = false;
-				} catch (e) {
-					console.error('An error occurred', e);
-					self.$notify({
-						title: 'Oops',
-						message: 'Some resources couldn\'t be loaded',
-						type: 'error'
-					});
-					self.$router.push({name: 'home'});
-				}
-			})();
+			this.load();
 		}
 	};
 </script>
