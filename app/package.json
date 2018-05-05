@@ -4,7 +4,7 @@
     "private": true,
     "scripts": {
         "serve": "vue-cli-service serve",
-        "build": "vue-cli-service build -d ../server/public",
+        "build": "vue-cli-service build",
         "test": "vue-cli-service test",
         "coverage": "istanbul report --include coverage/coverage-final.json --dir coverage html"
     },
