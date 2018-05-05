@@ -7,10 +7,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>3loprint</title>
     {% if ENVIRONMENT == 'production' %}
-        <link rel=preload as=script href=/public/js/vendor.bd61d383.js>
-        <link rel=preload as=script href=/public/js/app.7032cfa2.js>
-        <link rel=preload as=style href=/public/css/app.b0cfe99a.css>
-        <link href=/public/css/app.b0cfe99a.css rel=stylesheet>
+        <link rel=preload as=script href=/public/js/vendor.js>
+        <link rel=preload as=script href=/public/js/app.js>
+        <link rel=preload as=style href=/public/css/app.css>
+        <link href=/public/css/app.css rel=stylesheet>
     {% endif %}
     <style>
         html, body {
@@ -22,7 +22,6 @@
 </head>
 <body>
 <div id="app"></div>
-{% if ENV == 'production' %}
     {% if ENVIRONMENT == 'production' %}
         <script type=text/javascript>(function (r) {
 				var n = window["webpackJsonp"];
@@ -57,10 +56,10 @@
 					throw console.error(r), r
 				}
 			})([]);
-			//# sourceMappingURL=/js/manifest.ce28c628.js.map
+			//# sourceMappingURL=/js/manifest.js.map
         </script>
-        <script type=text/javascript src=/public/js/vendor.bd61d383.js></script>
-        <script type=text/javascript src=/public/js/app.7032cfa2.js></script>
+        <script type=text/javascript src=/public/js/vendor.js></script>
+        <script type=text/javascript src=/public/js/app.js></script>
     {% else %}
         <script src="http://localhost:8080/app.js"></script>
     {% endif %}
