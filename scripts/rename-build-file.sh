@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+# create some folders
+mkdir ${TRAVIS_BUILD_DIR}/server/public/css
+mkdir ${TRAVIS_BUILD_DIR}/server/public/js
+mkdir ${TRAVIS_BUILD_DIR}/server/public/fonts
+
+# copy font
+cp ${TRAVIS_BUILD_DIR}/app/dist/fonts/*.ttf ${TRAVIS_BUILD_DIR}/server/public/fonts/
+
 # copy css
 cp ${TRAVIS_BUILD_DIR}/app/dist/css/app*.css ${TRAVIS_BUILD_DIR}/server/public/css/app.css
 
