@@ -1,5 +1,7 @@
 # 3loprint
 
+![latest build](https://travis-ci.org/amiceli/3loprint.svg?branch=master)
+
 3loprint is a VueJS application for print your trello cards in postits.
 
 It generate PDF file with your trello access.
