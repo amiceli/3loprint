@@ -1,19 +1,15 @@
 #!/usr/bin/env bash
 
-# cp server/public/css/app.*.css service/public/css/app.css
-# cp
-path="server/public"
-
 # copy css
-cp ${path}/css/app*.css ${path}/css/app.css
+cp ${TRAVIS_BUILD_DIR}/server/public/css/app*.css ${TRAVIS_BUILD_DIR}/server/public/css/app.css
 
 # copy app js files
-cp ${path}/js/app.*.js ${path}/js/app.js
-cp ${path}/js/app.*.js.map ${path}/js/app.js.map
+cp ${TRAVIS_BUILD_DIR}/server/public/js/app.*.js ${TRAVIS_BUILD_DIR}/server/public/js/app.js
+cp ${TRAVIS_BUILD_DIR}/server/public/js/app.*.js.map ${TRAVIS_BUILD_DIR}/server/public/js/app.js.map
 
 # copy manifest map file
-cp ${path}/js/manifest.*.js.map ${path}/js/manifest.js.map
+cp ${TRAVIS_BUILD_DIR}/server/public/js/manifest.*.js.map ${TRAVIS_BUILD_DIR}/server/public/js/manifest.js.map
 
 # copy vendor js files
-cp ${path}/js/vendor.*.js ${path}/js/vendor.js
-cp ${path}/js/vendor.*.js.map ${path}/js/vendor.js.map
+cp ${TRAVIS_BUILD_DIR}/server/public/js/vendor.*.js ${TRAVIS_BUILD_DIR}/server/public/js/vendor.js
+cp ${TRAVIS_BUILD_DIR}/server/public/js/vendor.*.js.map ${TRAVIS_BUILD_DIR}/server/public/js/vendor.js.map
