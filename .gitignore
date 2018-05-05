@@ -9,3 +9,5 @@ server/.env
 .DS_Store
 server/public/favicon.ico
 server/public/index.html
+app/trello
+app/coverage
