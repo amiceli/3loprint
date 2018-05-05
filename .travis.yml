@@ -1,0 +1,6 @@
+language: javascript
+install:
+  - cd app && npm i -f
+script:
+  - cd app && npm run build
+  - bash scripts/rename-build-file.sh
